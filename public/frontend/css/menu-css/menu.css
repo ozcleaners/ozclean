@@ -1,0 +1,432 @@
+/* adds some margin below the link sets  */
+
+.navbar .dropdown-menu div[class*="col-md-4"] {
+    margin-bottom: 1rem;
+}
+
+.mobile-menu-wrap {
+    display: none;
+    position: relative;
+}
+
+.mobile-menu-wrap > .navbar-brand {
+    position: absolute;
+    z-index: 999999999;
+    left: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.mobile-menu-wrap > .mobile-menu-qoute {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    z-index: 999999;
+    display: inline-table;
+    margin: auto;
+    text-align: center;
+    padding-top: 11px;
+    color: white;
+    text-decoration: none;
+    width: 70%;
+}
+
+.mobile-menu-wrap > .mobile-menu-qoute > img {
+    width: auto;
+    max-width: 20px;
+    vertical-align: sub;
+    margin-right: 1px;
+}
+
+.navbar .dropdown-menu {
+    border: none;
+    background-color: #0060c8 !important;
+}
+
+.navbar {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.flex-row-wider {
+    display: flex;
+}
+
+.navbar-brand {
+    display: inline-block;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+.navbar-brand > img {
+    width: auto;
+    height: auto
+}
+
+/* breakpoint and up - mega dropdown styles */
+
+@media screen and (min-width: 992px) {
+    /* remove the padding from the navbar so the dropdown hover state is not broken */
+    .navbar {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+
+    /* remove the padding from the nav-item and add some margin to give some breathing room on hovers */
+    .navbar .nav-item {
+        padding: 0px;
+        margin: 0px;
+    }
+
+    /* makes the dropdown full width  */
+    .navbar .dropdown {
+        position: static;
+    }
+
+    .navbar .dropdown-menu {
+        width: 100%;
+        left: 0;
+        right: 0;
+        /*  height of nav-item  */
+        top: 60px;
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.3s linear;
+    }
+
+    /* shows the dropdown menu on hover */
+    .navbar .dropdown:hover .dropdown-menu,
+    .navbar .dropdown .dropdown-menu:hover {
+        display: block;
+        visibility: visible;
+        opacity: 1;
+        transition: visibility 0s, opacity 0.3s linear;
+    }
+
+    .navbar .dropdown-menu {
+        border: none;
+        background-color: #edf4f7 !important;
+    }
+}
+
+/*sticky header position*/
+
+.sticky.is-sticky {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    box-shadow: 0px 1px 5px #333;
+    background: #dceef4;
+}
+
+.nav-link {
+    display: block;
+    padding: .5rem 1rem;
+    background: transparent;
+    color: #fcfcfc !important;
+    border-radius: 0px;
+    font-weight: bold;
+    text-decoration: none
+}
+
+.nav-link:hover {
+    color: #e3e3e3 !important
+}
+
+.dropdown-toggle::after {
+    display: none !important;
+    margin-left: .255em;
+    vertical-align: .255em;
+    content: "";
+    border-top: .3em solid;
+    border-right: .3em solid transparent;
+    border-bottom: 0;
+    border-left: .3em solid transparent;
+}
+
+.btn-outline-light {
+    color: #ffffff;
+    border-color: #007cfb;
+    background: #007cfb;
+}
+
+.navbar-nav li.nav-item {
+    padding: 0px 10px !important;
+}
+
+.service-item.mb-4.active {
+    border: 2px solid #5cb85c;
+}
+
+ul.navMainTerms li.subParentActive a {
+    font-weight: bold;
+    border-left: 10px solid #5cb85c !important;
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding: 0px 5px !important;
+    line-height: 31px;
+    box-sizing: border-box;
+    display: block;
+    background: transparent;
+    color: #fcfcfc !important;
+    border-radius: 0px;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.navbar-expand-lg .navbar-nav a.nav-link.active {
+    border-bottom: 2px solid #FFFFFF;
+}
+
+@media screen and (max-width: 1199px) {
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding: 15px 4px !important;
+        font-weight: normal;
+        font-size: 13px !important;
+    }
+}
+
+.stcky-oz .dropdown-menu {
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 23px;
+}
+
+ul.nav.nav-pills li {
+    width: 100%;
+}
+
+ul.nav.nav-pills li a {
+    width: 100%;
+    background: #007cfb;
+    display: block;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    color: #fff;
+    text-decoration: none
+}
+
+ul.nav.nav-pills li a.active {
+    position: relative;
+    background: #007cfb;
+
+}
+
+.nav-pills > li + li {
+    margin-left: 0px;
+}
+
+ul.nav.nav-pills li .active:after,
+ul.nav.nav-pills li .active:before {
+    left: 100%;
+    top: 45%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+ul.nav.nav-pills li .active:after {
+    border-color: rgba(136, 183, 213, 0);
+    border-left-color: transparent;
+    border-width: 11px;
+    margin-top: -23px;
+}
+
+.submenu-icon-img {
+    width: auto;
+    max-width: 25px;
+    height: auto;
+    max-height: 25px;
+    margin: 0px;
+    padding: 0px;
+    line-height: 0px;
+    margin-right: 5px;
+}
+
+ul.nav.nav-pills li .active:before {
+    border-color: rgba(194, 225, 245, 0);
+    border-left-color: #007cfb;
+    border-width: 14px;
+    margin-top: -11px;
+}
+
+.header-main-menu .service-box-info h2 {
+    font-size: 14px;
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 20px;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.oz-tab-nav {
+    background: #eaeaea !important;
+    float: left;
+    width: 100%;
+    display: block;
+    height: 95%;
+}
+
+.tab-content.well {
+    background-image: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: none;
+    overflow-y: scroll;
+    min-height: 550px;
+    max-height: 550px;
+}
+
+.how-we-work {
+    background: #dceef4;
+    border-radius: 10px;
+    padding: 25px 0px;
+    width: 100%;
+    display: block;
+    margin: 5px 0px 10px;
+}
+
+.no-padding-left {
+    padding-left: 0px;
+}
+
+.no-padding-right {
+    padding-right: 0px;
+}
+
+.how-we-work h2 {
+    font-size: 16px;
+    text-align: left;
+    font-weight: 700;
+    border-bottom: 1px solid #edf4f7;
+    padding: 0px 25px 15px;
+}
+
+.how-we-work i {
+    display: block;
+    text-align: left;
+    font-size: 87px;
+    color: #000e39;
+    padding: 10px 25px 15px;
+}
+
+.how-we-work p {
+    margin-bottom: 10px;
+    text-align: left;
+    border-top: 1px solid #edf4f7;
+    font-size: 12px;
+    padding: 10px 25px 15px;
+    color: #424242;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.menu-special-off-body a {
+    background: #8dc640;
+    color: #fff;
+    padding: 10px 15px;
+    margin-top: 50px;
+    display: inline-block;
+}
+
+.menu-bar-search-form {
+}
+
+.menu-bar-search-form > form {
+    margin-block-end: 0px;
+}
+
+.menu-bar-search-form > form > input[type="text"] {
+    background-color: initial;
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, .4);
+    height: 34px;
+    padding: 0 23px;
+    font-size: 14px;
+    transition: all 200ms linear 0ms;
+    border-radius: 34px;
+    font-family: rubik, sans-serif;
+}
+
+.menu-bar-search-form > form > input[type="text"]::placeholder {
+    color: white;
+    opacity: 1;
+}
+
+.menu-bar-search-form > form > input[type="text"]:focus {
+    border-color: rgba(255, 255, 255, .85);
+    outline: 0;
+}
+
+.menu-bar-search-form > form > .menu-bar-search-submit > input[type="submit"] {
+    position: absolute;
+    right: 2px;
+    width: 42px;
+    z-index: 999999;
+    background: transparent;
+    color: transparent;
+    border: none;
+    top: -33px;
+    padding: 4px;
+    border-radius: 50%;
+}
+
+.menu-bar-search-form > form > .menu-bar-search-submit {
+    position: relative;
+}
+
+.menu-bar-search-form > form > .menu-bar-search-submit > i.fa {
+    content: 'test';
+    display: block;
+    clear: both;
+    position: absolute;
+    right: 15px;
+    top: -24px;
+    bottom: 0px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.themeheaderstickyclass {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999999999;
+}
+
+.navbar-brand, .navbar-nav > li > a {
+    text-shadow: none
+}
+
+.tab-content > .tab-pane > .row > .col-lg-2 {
+    width: 20% !important
+}
+
+.nav-pills > li > a {
+    border-radius: 0px;
+}
+
+@media screen and ( max-width: 767px ) {
+    .step-of-process .process-content-title::before,
+    .step-of-process .process-content-description {
+        display: none;
+    }
+}

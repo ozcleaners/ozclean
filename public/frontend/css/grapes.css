@@ -1,0 +1,8 @@
+.row {
+    display: revert;
+    padding: unset;
+}
+
+.grapes-style .row{
+    padding: 10px;
+}

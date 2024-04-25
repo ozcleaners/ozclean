@@ -1,0 +1,56 @@
+Controller 
+============
+1. Ami j data chassi tar jonno age query banate hoba.
+	Mone rakhte hoba Query er ses e get() method use er poriborte query() use korte hoba. Because Amader datatable helper class e already get() /Paginate() call kora ase.
+
+	Example : $query = User::query();
+
+2. Ami view file e J column gulu view korate chai sei column Key gulu with value gulu niye ekta array banate hoba.
+	Array te key name obossoi database er table er column name hoba.
+	Value gulu String hisabe pass korate hoba .value kono custom query kora id er maddhome data chaile ta string hisabe php code likhte hoba. 
+	Must be Value te column name gulu $data->column_name ei object akarei dte hoba
+	
+	# Array er key gulu amra upore create kora queryer variable dd korlei peye jabo
+	
+	Exxample:   $field = [
+					'name' => '$data->name',
+					'designition' => '\App\Models\Designition::where('designition_id', $data->designition_id)->first()->name ?? nulll',
+				];
+
+
+3. datatable generate korar jonno DataTable class er location deya call korte hoba. & Parameter hisabe 
+				$request, $query, $field pathate hoba.
+				ei 3 ta must be pathate hoba.
+
+	jehetu amra amader datatble daterange use koresi .sekhetre amra 4th parameter e array hisabe 'daterange ta kon field er upore hoba setao pathate pari daterange key use kora. ei parameter ta optional'
+
+	# ekahne $request must be Pathate hoba .Jeta Request class er maddhome pawa jabe.
+
+	Example: \App\Helpers\Datatble($request, $query, $field, ['daterange', craete_date']);
+
+
+View File
+=========
+ 1. view file e table e datatable use kora data dekhanu jonno amader just table tag use kora html e ekta table bnate hoba. ekhetre kono tr td thead tboy kishu use korte hoba na. & table e ekta unique id dte hoba.
+
+ 	Example : <table id="example_table"></table>
+
+2. amra already ekta datatable er jonno ekta datatable helper blade file toiri koresi. amader sei blade file ti custom js section include kora nite hoba.Because sekhane kishu js file ase. sei js file gulu jeno footer e load hoy.
+
+3. uporer helper blade e amra already datatables() name e ekta function create koresi.
+	sei function ti amader call korte hoba. & function table er id  & js er arrayObject akare parameter pass korte hoba.
+	 Example : <script>
+
+	 			let field = [
+	 			  {'title' : 'Name', "data" : 'name'}
+	 			  {'title' : 'Age', "data" : 'age'}
+	 			];
+	 			datatables("#example_table", arr);
+	 			</script>
+
+	 			# ekhane field er title e Thead e ja dekhate chai, & Data er moddhe Controller theke asa response array er key dte hoba.
+
+4. Filter, Search box, button er jonno amader just  use korte hoba 
+ 				<div id="dt_filter"></div>
+	r paginate er jonno 
+			<div id="dt_pageinfo"></div>

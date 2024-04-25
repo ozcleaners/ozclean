@@ -1,0 +1,659 @@
+<script>
+    jQuery(document).ready(function ($) {
+
+        // let $ = jQuery;
+        let wrapClass = ".calculator_form";
+
+        //Plus Minus Add quantity increase decrese
+        $(wrapClass).on('click', 'button.plus', function () {
+            let dataClass = $(this).data('class');
+            let takeClass = $(wrapClass + ` input[data-class="${dataClass}"]`);
+            let getVal = parseInt(takeClass.val());
+            let maxValue = takeClass.attr('max');
+            //alert(maxValue)
+            if (maxValue > getVal) {
+                takeClass.val(getVal + 1);
+            } else {
+                alert('You have exceeded the maximum value')
+            }
+        })
+        $(wrapClass).on('click', 'button.minus', function () {
+            let dataClass = $(this).data('class');
+            let takeClass = $(wrapClass + ` input[data-class="${dataClass}"]`);
+            let getVal = parseInt(takeClass.val());
+            let minValue = takeClass.attr('min');
+
+            if (minValue < getVal) {
+                takeClass.val(getVal - 1);
+            } else {
+                alert('You have exceeded the minimum value')
+            }
+        })
+
+        /**
+         * ========================================================
+         */
+
+        /**
+         * Dynamic calculation Function
+         */
+        function calculated(className, options = {}) {
+            let title = $(className).data('title');
+            let qty = $(className).val();
+            let basePrice = $(className).data('base_price');
+            let extraDefault = $(className).data('extra_default');
+            let mkClass = $(className).attr('name');
+            let equationType = $(className).data('equation_type');
+            let calculateWith = $(className).data('calculate_with');
+            let label = $(className).data('label');
+            let accountsType = $(className).data('accounts_type');
+            let defaults = {
+                'qty': qty,
+            };
+            let arrMerge = $.extend(defaults, options);
+            qty = arrMerge.qty;
+            let orgQty = qty;
+            var price = parseInt((qty * basePrice) + extraDefault);
+
+            let image = $(className).data('image');
+
+
+
+
+            //Create main / basic / extra class inside order-summary (accountsType)
+            let accountTypeClass = $('.order_summary div').hasClass(accountsType);
+            // console.log(accountTypeClass)
+            if (accountTypeClass == true) {
+
+            } else {
+                //$('.order_summary').append(`<div class="${accountsType}"><div class="mb-3 text-dark accounts_header font-weight-bold"> </div><ul class="list"></ul></div>`);
+            }
+
+
+            let labels = qty + ' ' + title;
+            let calcSummaryCls = '';
+            let sumRightSideDigitCls = '';
+
+
+
+
+            /* Before Total - After Total Calculation */
+            let relationCalculate = sum_service_amount();
+
+            if (calculateWith == 'After Total') {
+                calcSummaryCls = '.calculation-after-total ul.list';
+                sumRightSideDigitCls = 'added_item_amount';
+                labels = title;
+            }
+
+            else if (calculateWith == 'Before Total') {
+                let mainTotal = parseFloat($('.main_total').text()).toFixed(2)
+                calcSummaryCls = `.order_summary .${accountsType} ul.list`;
+                sumRightSideDigitCls = 'service_amount';
+                relationCalculate = mainTotal;
+            }
+            else {
+                calcSummaryCls = `.order_summary .${accountsType} ul.list`;
+                sumRightSideDigitCls = 'service_amount';
+            }
+            /* End Before Total - After Total Calculation */
+
+
+            /** Equation Type (Percentage/Fixed) Calculation */
+            if (equationType == 'percentage') {
+                price = relationCalculate * basePrice / 100;
+                //qty = basePrice + '%';
+                qty = '&nbsp;';
+            } else if (equationType == 'fixed') {
+                price = price;
+            }
+            /* End */
+
+            price = parseFloat(price).toFixed(2)
+
+            let serviceCat = `services[${accountsType}]`;
+            let html = `
+                            <li class="${mkClass} mb-3">
+                                <img src="${image}" style="width: 30px;"/>
+                                ${labels}
+                              <input type="hidden" name="${serviceCat}[${mkClass}][qty]" value="${orgQty}" />
+                              <input type="hidden" name="${serviceCat}[${mkClass}][amount]" value="${price}" />
+                              <input type="hidden" name="${serviceCat}[${mkClass}][equation_type]" value="${equationType}" />
+                              <input type="hidden" name="${serviceCat}[${mkClass}][base_price]" value="${basePrice}" />
+                              <input type="hidden" name="${serviceCat}[${mkClass}][extra_default]" value="${extraDefault}" />
+                              <input type="hidden" name="${serviceCat}[${mkClass}][title]" value="${title}" />
+                              <input type="hidden" name="${serviceCat}[${mkClass}][slug]" value="${mkClass}" />
+                              <div class="float-right d-none">
+                                  $<span class="${sumRightSideDigitCls}">${price}</span>
+                              </div>
+
+                          </li>
+                `;
+            //We make a css class use data className. check this class exist on html
+            let checkClass = $('.order_summary span').hasClass(mkClass);
+
+            if (checkClass == true) {
+                $(calcSummaryCls + ' span.' + mkClass + '').html(html)
+            } else {
+                $(calcSummaryCls + ' span.' + mkClass).remove()
+                $(calcSummaryCls).append(`<span class="${mkClass}">${html}</span>`)
+            }//
+            if (qty == 0) {
+                $(calcSummaryCls + ' span.' + mkClass).remove()
+            }//
+
+            if (accountsType == 'extra') {
+                //$(`.${accountsType} .accounts_header`).html('Extras')
+
+            }
+            mainTotal()
+            sum_service_amount();
+            sum_sub_total_amount();
+            sum_final_total_amount();
+
+        }
+
+        function mainTotal() {
+            let sum = parseInt('{{$default_price ?? 0}}');
+
+            $('.main .service_amount').each(function () {
+                let doSum = parseFloat($(this).text()).toFixed(2);
+                sum += parseFloat(doSum);
+            });
+            console.log(sum);
+
+            sum = parseFloat(sum).toFixed(2);
+            $('.main_total').html(sum)
+            return sum;
+        }
+
+        mainTotal()
+
+        /**
+         * =================================================================================
+         */
+        //Calculation Part
+        //if click
+
+        function getSelectedClass(className) {
+            let getClass = wrapClass + ` input[data-class="${className}"]`;
+            let service_type = $(getClass).data('service_type');
+            calculated(getClass);
+            sum_service_amount()
+            if (service_type == 'extra') {
+                //If Selected service type Extra , Extra Service don't calculate
+            } else {
+                afterTotalCalc()
+            }
+
+            sum_sub_total_amount()
+            sum_final_total_amount()
+        }
+
+        $(wrapClass).on('click', '.plus, .minus', function () {
+            let className = $(this).data('class');
+            getSelectedClass(className)
+        })
+
+        $(wrapClass).on('change', '.select-radio', function () {
+            let className = $(this).data('class');
+            getSelectedClass(className)
+        })
+
+        $(wrapClass).on('keyup', 'input.plus_minus_quantity', function () {
+            let className = $(this).data('class');
+            //alert(className)
+            getSelectedClass(className)
+        })
+
+
+        function afterTotalCalc() {
+            //console.log($('input[data-calculate_with="After Total"]').attr('data-title'))
+            $('.select-radio').each(function () {
+                let className = $(this).data('class');
+                let dataSelected = $(this).data('selected');
+                let calculateWith = $(this).data('calculate_with');
+                let checked = $(this).attr('checked');
+                let serviceType = $(this).data('service_type');
+                //console.log(serviceType)
+                //console.log(className)
+                if (calculateWith == 'After Total') {
+                    if ($(this).is(":checked")) {
+                        calculated(wrapClass + ` input[data-class="${className}"]`);
+                    }
+                }
+                // if (calculateWith == 'Before Total') {
+                //     if ($(this).is(":checked")) {
+                //         calculated(wrapClass + ` input[data-class="${className}"]`);
+                //     }
+                // }
+            })
+
+        }
+
+
+        function sum_service_amount() {
+            let sum = 0;
+            $('.service_amount').each(function () {
+                // sum += parseInt($(this).text());
+                let doSum = parseFloat($(this).text()).toFixed(2)
+                sum += parseFloat(doSum);
+            });
+            sum = parseFloat(sum).toFixed(2)
+            $('.sum_service_amount').html(sum);
+            return sum;
+
+        }
+
+
+        function sum_sub_total_amount() {
+            let sum = parseInt(0);
+            $('.added_item_amount').each(function () {
+                // sum += parseInt($(this).text());
+                let doSum = parseFloat($(this).text()).toFixed(2)
+                sum += parseFloat(doSum);
+            });
+
+            // sum = parseInt(sum)
+            sum = parseFloat(sum).toFixed(2)
+            $('.sum_sub_total_amount').html(sum);
+
+            //Added Postcode
+            postCodeAddCalculation(sum)
+            scheduleTimeCalculation(sum)
+
+            return sum;
+        }
+
+        //Extra text Show if select any Extra
+        function showExtraHeader() {
+            let ele = $(".extra li").length;
+            if (ele === 0) {
+                $('.extra .accounts_header').hide()
+            } else {
+                $('.extra .accounts_header').show()
+            }
+
+        }
+
+        showExtraHeader()
+
+        function sum_final_total_amount() {
+            let sum = 0;
+            $('.sum_sub_total_amount').each(function () {
+                // sum += parseInt($(this).text());
+                let doSum = parseFloat($(this).text()).toFixed(2)
+                sum += parseFloat(doSum);
+            });
+
+            // sum = parseInt(sum)
+            sum = parseFloat(sum).toFixed(2)
+            //sum_sub_total_amount()
+
+            $('.input_sum_final_total_amount').val(sum);
+            $('.sum_final_total_amount').html(sum);
+
+            showExtraHeader();
+            let minumum_price = parseInt("{{$minimumPrice ?? 0}}")
+            if (sum <= minumum_price) {
+                $('.minimum_price_notice').html('Minimum Order ${{$minimumPrice ?? 0}}')
+            } else {
+                $('.minimum_price_notice').html('')
+            }
+            return sum;
+        }
+
+
+        sum_service_amount();
+        sum_sub_total_amount();
+        sum_final_total_amount();
+
+
+        /** Calculation Order Date Time */
+        function postCodeAddCalculation(catchGetTotal){
+            // console.log(catchGetTotal)
+            let total = parseInt(catchGetTotal);
+            let postCodeEquationType = "{{$postCodeRate->getEquationType->slug ?? null}}"
+            let rate = parseInt("{{$postCodeRate->rate ?? 0}}");
+            let getTotal = rate;
+            let text = rate;
+            if(postCodeEquationType == 'percentage'){
+                getTotal = parseInt(catchGetTotal*getTotal)/100;
+                text = rate +'%'
+            }
+            let serviceCat = `services[other]`;
+            if(rate > 0) {
+                // ${text} for Postcode {{$postCode ?? null}}
+                let html = `
+                        Post Code: {{$postCode ?? null}}
+                        <input type="hidden" name="${serviceCat}[postcode][title]" value="Postcode {{$postCode ?? null}}" />
+                            <input type="hidden" name="${serviceCat}[postcode][base_price]" value="${rate}" />
+                            <input type="hidden" name="${serviceCat}[postcode][amount]" value="${getTotal}" />
+                            <input type="hidden" name="${serviceCat}[postcode][slug]" value="postcode" />
+                            <input type="hidden" name="${serviceCat}[postcode][equation_type]" value="${postCodeEquationType}" />
+                            <div class="float-right d-none">
+                            $<span class="postcode sum_sub_total_amount loadCalc">${getTotal}</span>
+                    </div>
+                `;
+                $('.calculation_order_date_time_postcode li.postcode').html(`<span class="postcode_area">${html}</span>`)
+            }
+            return getTotal;
+
+        }
+
+        //End
+
+        /**=================================
+         *  calculation schedule Date Time
+         *  ===============================*/
+        function scheduleTimeCalculation(catchGetTotal = sum_sub_total_amount()) {
+            //When Select A time
+            let rate;
+            let equationType;
+            let loadText;
+            let selectedDate = $('.schedule-date').val();
+            let getDay = $('.schedule_time').find(':selected').text();
+            let getTime = $('.schedule_time').find(':selected').data('day');
+            let getid = $('.schedule_time').find(':selected').data('id');
+            let orgRate = $('.schedule_time').find(':selected').data('rate');
+            $('select.schedule_time').on('change', function () {
+                let total = parseInt(catchGetTotal);
+                let getTime = $(this).find(':selected').text();
+                let getRate = $(this).find(':selected').data('rate');
+                let getDay = $(this).find(':selected').data('day');
+                let selectedDate = $('.schedule-date').val();
+                equationType = $(this).find(':selected').data('equation_type');
+                rate = getRate;
+                localStorage.setItem('schedule_rate', rate);
+                localStorage.setItem('schedule_rate_equation_type', equationType);
+                // loadText = `${selectedDate} - ${getTime} <br> ${getDay} - ${rate} ${equationType}`;
+                loadText = `${selectedDate} - ${getTime}`;
+                localStorage.setItem('schedule_text', loadText);
+                scheduleTimeCalculation()
+            })
+            equationType = $('select.schedule_time').find(':selected').data('equation_type');
+            //when any service decrease increase
+            rate = localStorage.getItem('schedule_rate');
+            let serviceCat = `services[other]`;
+            if (rate != 'null') {
+                // equationType = localStorage.getItem('schedule_rate_equation_type');
+                loadText = localStorage.getItem('schedule_text');
+                if (equationType == 'percentage') {
+                    rate = parseInt(catchGetTotal * rate) / 100;
+                }
+                let title = `{!!
+                        json_encode(
+                            ['Date'=> '${selectedDate}',
+                            'Time' => '${getTime}',
+                            'Day' => '${getDay}',
+                            'TimeId' => '${getid}',
+                            ])
+                        !!}`;
+                //${loadText}
+                let datep = new Date(selectedDate)
+                const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                let showDateDay = `${days[datep.getDay()]}, ${datep.getDate()} ${month[datep.getMonth()]} ${datep.getFullYear()}`;
+                let html = `
+                    <span class="show_schedule_date_time_day">${getDay} <br> ${showDateDay}</span>
+                    <input type="hidden" name="${serviceCat}[schedule][title]" value='${title}'/>
+                    <input type="hidden" name="${serviceCat}[schedule][base_price]" value="${orgRate}" />
+                    <input type="hidden" name="${serviceCat}[schedule][amount]" value="${rate}" />
+                    <input type="hidden" name="${serviceCat}[schedule][slug]" value="schedule_date_time" />
+                    <input type="hidden" name="${serviceCat}[schedule][equation_type]" value="${equationType}" />
+                    <div class="float-right d-none">
+                        $<span class="schedule_date_time sum_sub_total_amount">${rate}</span>
+                    </div>
+
+                `;
+                $('.calculation_order_date_time_postcode li.schedule_date_time').html(`<span class="schedule_date_time_area">${html}</span>`)
+            }
+
+            sum_final_total_amount();
+        }
+
+        // scheduleTimeCalculation()
+
+        $('#schedule_date').on('change', function () {
+            // alert(1)
+            let getDate = $(this).val()
+            const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            let datep = new Date(getDate);
+            let getDay = days[datep.getDay()];
+            let showDateDay = `${datep.getDate()} ${month[datep.getMonth()]} ${datep.getFullYear()}`
+
+            $('.show_schedule_date_time_day').html(`${getDay}, ${showDateDay}`)
+            $('span.schedule_date_time').text(0);
+            sum_final_total_amount();
+        })
+
+        /**End schedule */
+
+
+        //On fly
+        setTimeout(function () {
+            //On fly
+            $('.select-radio').each(function () {
+                let className = $(this).data('class');
+                let dataSelected = $(this).data('selected');
+                let calculateWith = $(this).data('calculate_with');
+                let checked = $(this).attr('checked');
+                if (dataSelected == 'yes') {
+                    getSelectedClass(className)
+                    // calculated(wrapClass + ` input[data-class="${className}"]`);
+                    // sum_service_amount();
+                }
+
+            })
+
+            $('.plus_minus_quantity').each(function () {
+                let className = $(this).data('class');
+                //console.log(className)
+                getSelectedClass(className)
+
+            })
+
+
+        }, 300)
+
+
+        /**
+         *================
+         *  Modal
+         *  ==============
+         */
+
+        //On fly
+        $('input.calc-open-modal').each(function () {
+            let checked = $(this).prop('checked');
+            let calcId = $(this).data('calc')
+            let className = wrapClass + ` input[data-class="${calcId}"]`;
+            let counterType = $(this).data('counter_type')
+            let service_type = $(this).data('service_type');
+            let html = $('script#' + calcId).html();
+            if (checked == true) {
+                $('.calc-modal .modal-details').html(html)
+                if (counterType == 'popup') {
+                    calculated(className)
+                    // console.log(calcId)
+                } else {
+                    calculated(className, {'qty': 1})
+                }
+            }
+            sum_service_amount()
+            if (service_type == 'extra') {
+
+            } else {
+                afterTotalCalc()
+            }
+            sum_sub_total_amount()
+            sum_final_total_amount()
+
+        })
+
+        //Modal open
+        $(wrapClass).on('click', 'input.calc-open-modal', function () {
+            let checked = $(this).prop('checked');
+            let calcId = $(this).data('calc')
+            let counterType = $(this).data('counter_type')
+            let html = $('script#' + calcId).html();
+            let service_type = $(this).data('service_type');
+            // console.log(service_type)
+            // alert(checked)
+
+            $('.calc-modal .modal-details').html(html)
+            if (counterType == 'popup') {
+
+                if (checked == true) {
+
+                    $('#calcModal .modal-dialog').removeClass('modal-lg').addClass('modal-md text-center')
+                    $('#calcModal').modal('show');
+                    $('.modal-close').attr('data-modal-close', calcId)
+                } else {
+                    // $(this).prop("checked", true)
+                    $(this).prop("checked", false)
+                    $('ul.list span.' + calcId).remove()
+                }
+            } else {
+                let className = wrapClass + ` input[data-class="${calcId}"]`;
+                calculated(className, {'qty': 1})
+                if (checked == true) {
+
+                } else {
+                    // $(this).prop("checked", true)
+                    $(this).prop("checked", false)
+                    $('ul.list span.' + calcId).remove()
+                }
+            }
+
+
+            sum_service_amount()
+            if (service_type == 'extra') {
+
+            } else {
+                afterTotalCalc()
+            }
+
+            sum_sub_total_amount()
+            sum_final_total_amount()
+        })
+
+        //Modal Close
+        $(wrapClass).on('click', '.modal-close', function () {
+            let calcId = $(this).attr('data-modal-close');
+            let getDataClass = `input[data-class="${calcId}"]`;
+            let checkVal = $(getDataClass).val();
+            if (checkVal == 0) {
+                $('input[data-calc="' + calcId + '"]').prop("checked", false)
+            } else {
+                $('input[data-calc="' + calcId + '"]').prop("checked", true)
+                let className = wrapClass + ` input[data-class="${calcId}"]`;
+                calculated(className, {'qty': checkVal})
+            }
+            //alert(checkVal)
+            $(this).data('modal-close', null)
+        })
+
+
+        //Modal Cancel(Service)
+        $(wrapClass).on('click', '.modal-cancel', function () {
+            let calcId = $(this).attr('data-modal-close');
+            let getDataClass = `input[data-class="${calcId}"]`;
+            let checkVal = $(getDataClass).val();
+            // if (checkVal == 0) {
+            $('input[data-calc="' + calcId + '"]').prop("checked", false)
+            $('ul.list span.' + calcId).remove()
+            // }
+            //alert(checkVal)
+            $(this).data('modal-close', null)
+            sum_service_amount();
+            sum_sub_total_amount();
+            sum_final_total_amount();
+        })
+
+        /* ==============
+        // Tooltip Modal
+        ================ */
+        $(wrapClass).on('click', 'i.toltip', function () {
+            let toltip = $(this).data('toltip');
+            let html = $('script#tooltips_' + toltip).html();
+            $('.toltip_content .modal-dialog').removeClass('modal-md text-center').addClass(' modal-lg')
+            $('.toltip_content .modal-details').html(html)
+            $('.toltip_content').modal('show');
+        })
+
+
+        /*====================
+        //Submit Form
+        ================ */
+        $('.submit_form').click(function (e) {
+            e.preventDefault()
+            let minimumPrice = parseInt(`{{$minimumPrice ?? 0}}`)
+            let total = parseInt($('.sum_final_total_amount').text());
+            //alert(total)
+
+            let checkScheduleTime = $('select.schedule_time').find(':selected').val();
+            if (checkScheduleTime == null || checkScheduleTime == 'Select a time') {
+                alert('select time of schedule');
+            } else {
+                if (total >= minimumPrice) {
+                    $('.order_form').submit()
+                } else {
+                    alert(`You did not meet the required order amount. Your order's minimum amount must be ${minimumPrice}$`)
+                }
+            }
+
+        })
+
+
+    })
+
+
+    // Datapicker
+    $(".datepicker").datepicker({
+        "dateFormat": "yy-mm-dd",
+        changeYear: true
+    });
+
+
+</script>
+
+
+<link rel="stylesheet" href="{{$publicDir}}/frontend/css/calculator-form.css?{{rand(0,999)}}">
+
+
+<style>
+    .calculator_form.modal {
+        text-align: center;
+        padding: 0 !important;
+    }
+
+    .calculator_form.modal:before {
+        content: '';
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+        margin-right: -4px; /* Adjusts for spacing */
+    }
+
+    .calculator_form .modal-dialog.modal-dialog-centered {
+        display: inline-block;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .calculator-body {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 80px;
+        height: 100%;
+        overflow: auto;
+    }
+
+    .d-none {
+        display: block !important;
+    }
+
+
+</style>

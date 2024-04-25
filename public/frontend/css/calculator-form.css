@@ -1,0 +1,284 @@
+label.label_bottom_border {
+    border-bottom: 1px dotted #eee;
+    display: block;
+    width: 100%;
+    line-height: 3rem;
+}
+
+
+.number-input {
+    border: 1px solid #007CC7;
+    display: inline-flex;
+    border-radius: 12px 0 12px 0px;
+}
+
+.number-input .stepUp {
+    background: #007CC7;
+    border-radius: 0 0px 8px 0;
+    margin-left: 10px;
+    color: #FFFFFF;
+}
+
+.number-input .stepDown {
+    background: #007CC7;
+    border-radius: 8px 0 0 0px;
+    margin-right: 10px;
+    color: #FFFFFF;
+}
+
+.number-input,
+.number-input * {
+    box-sizing: border-box;
+}
+
+.number-input button.plus:after {
+    display: inline-block;
+    position: absolute;
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 900;
+    content: "\f067";
+    transform: translate(-50%, -50%) rotate(180deg);
+}
+
+.number-input button.minus:after {
+    display: inline-block;
+    position: absolute;
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 900;
+    content: "\f068";
+    transform: translate(-50%, -50%) rotate(180deg);
+}
+
+/*.number-input button.plus:after {*/
+/*    transform: translate(-50%, -50%) rotate(0deg);*/
+/*}*/
+
+.number-input .stepDown, .number-input .labelWithInput, .number-input .stepUp {
+    display: inline-flex;
+}
+
+.number-input input {
+    outline: none;
+    border: none;
+    display: block;
+    line-height: 1.5em;
+    /* font-size: 14pt; */
+    padding: 0 0px 0 0px;
+    text-align: center;
+    max-width: 35px;
+}
+
+.number-input button {
+    outline: none;
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    margin: 0;
+    position: relative;
+    font-weight: normal;
+    font-size: 13px;
+}
+
+.number-input label {
+    justify-content: center;
+    align-items: center;
+    display: block;
+    padding-right: 15px;
+    font-weight: normal;
+    margin-top: 2px;
+    margin-bottom: 0px;
+}
+
+.order_summary ul.list, .calculation-after-total ul.list, .calculation_order_date_time_postcode ul.list {
+    padding-inline-start: 0px;
+}
+
+.order_summary ul.list li, .calculation-after-total ul.list li, .calculation_order_date_time_postcode ul.list li {
+    list-style: none;
+}
+
+/* Customize the label (the container) */
+.containerx {
+    display: inline-block;
+    position: relative;
+    padding-left: 0px;
+    margin-bottom: 2px;
+    font-size: 16px;
+    margin-right: 0px;
+    font-weight: normal;
+}
+
+/* Hide the browser's default checkbox */
+.containerx input[type=checkbox] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.containerx .breakdown input[type=checkbox] {
+    position: unset;
+    opacity: unset;
+    cursor: pointer;
+    height: auto;
+    width: auto;
+}
+
+/* Create a custom checkbox */
+.containerx .checkmark {
+    position: relative;
+    /*position: absolute;*/
+    /*top: 5px;*/
+    /*left: 0;*/
+    display: inline-block;
+    margin-right: 5px;
+    height: 17px;
+    width: 17px;
+    background-color: #fff;
+    border: 1px solid #c3c3c3;
+    cursor: pointer;
+}
+
+/* On mouse-over, add a grey background color */
+.containerx input ~ .checkmark:hover {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.containerx input:checked ~ .checkmark {
+    background-color: #007CC7;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.containerx input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.containerx .checkmark:after {
+    left: 4px;
+    top: 0px;
+    width: 7px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+
+/** Container Radio **/
+/* The container */
+.containerRadio {
+    display: block;
+    position: relative;
+    padding-left: 0px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Hide the browser's default radio button */
+.containerRadio input[type=radio] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom radio button */
+.containerRadio .checkmark {
+    position: relative;
+    top: 2px;
+    /*left: 0;*/
+    display: inline-block;
+    margin-left: 5px;
+    height: 15px;
+    width: 15px;
+    background-color: #fff;
+    border: 1px solid #c3c3c3;
+    border-radius: 0%;
+}
+
+/* On mouse-over, add a grey background color */
+.containerRadio:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.containerRadio input:checked ~ .checkmark {
+    background-color: #007CC7;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.containerRadio input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.containerRadio .checkmark:after {
+    /*top: 5px;*/
+    /*left: 5px;*/
+    /*width: 8px;*/
+    /*height: 8px;*/
+    /*border-radius: 50%;*/
+    /*background: white;*/
+    left: 3px;
+    top: 0px;
+    width: 7px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+
+.toltip.badge {
+    display: inline-block;
+    min-width: 4px;
+    padding: 2px 5px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #007CC7;
+    border-radius: 50%;
+    margin-top: -24px;
+    cursor: pointer;
+}
+
+.calculator_form_service_modal .modal-details .input-wrap{
+    justify-content: center;
+}
+.calculator_form_service_modal .plus_minus_wrap,  .calculator_form_service_modal .plus_minus_img_wrap{
+    display: block !important;
+}
+.calculator_form_service_modal .plus_minus_img_wrap img {
+    width: 100px !important;
+    margin-bottom: 5px;
+}
